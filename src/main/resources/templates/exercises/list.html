@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios - FerrumLog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --gym-orange: #ff6b35;
+            --gym-dark: #1a1a2e;
+            --gym-darker: #0f0f1e;
+        }
+
+        body {
+            font-family: 'Inter', 'Roboto', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--gym-darker) 0%, var(--gym-dark) 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .panel {
+            background: #ffffff;
+            border: 1px solid #d9d9d9;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+            color: #111111;
+        }
+
+        .page-header {
+            background: #ffffff;
+            border: 1px solid #d9d9d9;
+            border-radius: 14px;
+            padding: 16px 20px;
+            color: #111111;
+        }
+
+        .table thead th {
+            color: #111111;
+            border-color: #dcdcdc;
+        }
+
+        .table td {
+            color: #111111;
+            border-color: #e7e7e7;
+            vertical-align: middle;
+        }
+
+        .muted-black {
+            color: #333333;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gym-orange) 0%, #ff8c5a 100%);
+            border: none;
+            font-weight: 700;
+        }
+    </style>
+    <link href="/css/light-commercial-theme.css" rel="stylesheet">
+</head>
+<body>
+<div class="container py-4">
+    <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <div class="page-brand mb-3">
+                <img src="/images/logo.jpg" alt="FerrumLog" class="brand-logo">
+                <span class="brand-wordmark">FERRUMLOG</span>
+            </div>
+            <h1 class="h3 mb-1">Ejercicios</h1>
+            <p class="mb-0 muted-black">Banco de ejercicios y estadisticas de los ejercicios de tus rutinas.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/dashboard" class="btn btn-outline-light">Dashboard</a>
+            <a href="/exercises/new" class="btn btn-primary">+ Nuevo ejercicio</a>
+        </div>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="panel">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <h2 class="h5 mb-0">Ejercicios en mis rutinas</h2>
+            <small class="muted-black">Mejor serie por ejercicio (peso x reps)</small>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Ejercicio</th>
+                    <th>Grupo muscular</th>
+                    <th>Mejor serie</th>
+                    <th>Total de series</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(myRoutineExercises)}">
+                    <td colspan="4">Todavia no tienes ejercicios en tus rutinas.</td>
+                </tr>
+                <tr th:each="item : ${myRoutineExercises}">
+                    <td th:text="${item.name}">Ejercicio</td>
+                    <td th:text="${item.muscleGroup}">Grupo</td>
+                    <td th:text="${item.bestSet}">Aun sin registros</td>
+                    <td th:text="${item.totalSets}">0</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2 class="h5 mb-3">Catalogo general</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Grupo muscular</th>
+                    <th>Descripcion</th>
+                    <th style="width: 180px;">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(exercises)}">
+                    <td colspan="4">No hay ejercicios en el catalogo.</td>
+                </tr>
+                <tr th:each="exercise : ${exercises}">
+                    <td th:text="${exercise.name}">Nombre</td>
+                    <td th:text="${exercise.muscleGroup}">Grupo</td>
+                    <td th:text="${exercise.description != null and !#strings.isEmpty(exercise.description) ? exercise.description : 'Sin descripcion'}">Descripcion</td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a th:href="@{/exercises/{id}/edit(id=${exercise.id})}" class="btn btn-sm btn-outline-dark">Editar</a>
+                            <form th:action="@{/exercises/{id}/delete(id=${exercise.id})}" method="post">
+                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

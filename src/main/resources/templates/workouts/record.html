@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenamientos - FerrumLog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --gym-orange: #ff6b35;
+            --gym-dark: #1a1a2e;
+            --gym-darker: #0f0f1e;
+            --panel: #ffffff;
+            --panel-border: #e8eaee;
+            --text-muted: #505661;
+            --surface-light: #ffffff;
+            --surface-soft: #f2f4f7;
+            --ink-dark: #111111;
+        }
+
+        body {
+            font-family: 'Inter', 'Roboto', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--gym-darker) 0%, var(--gym-dark) 100%);
+            color: var(--ink-dark);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: rgba(26, 26, 46, 0.95);
+            border-bottom: 2px solid rgba(255, 107, 53, 0.3);
+            backdrop-filter: blur(8px);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            color: var(--gym-orange) !important;
+            letter-spacing: 0.8px;
+        }
+
+        .nav-link {
+            color: rgba(255, 107, 53, 0.95) !important;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #ff8c5a !important;
+        }
+
+        .card-custom {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+            color: var(--ink-dark);
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: var(--ink-dark);
+        }
+
+        .table {
+            margin-bottom: 0;
+            background: var(--surface-light);
+            color: var(--ink-dark);
+            border-radius: 12px;
+            overflow: hidden;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table thead tr {
+            background: var(--surface-soft);
+        }
+
+        .table thead th {
+            color: var(--ink-dark);
+            border: none;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 14px 12px;
+            font-weight: 800;
+        }
+
+        .table td {
+            color: var(--ink-dark);
+            border-color: #e8eaee;
+            vertical-align: middle;
+            background: var(--surface-light);
+            padding: 12px;
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover td {
+            background: #fff3ee;
+        }
+
+        .exercise-meta {
+            color: #505661;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .form-control, .form-select {
+            background: #ffffff;
+            color: #111111;
+            border: 2px solid rgba(255, 107, 53, 0.35);
+            font-weight: 700;
+            border-radius: 10px;
+            min-height: 42px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            color: #111111;
+            border-color: var(--gym-orange);
+            background: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.28);
+        }
+
+        .form-control::placeholder {
+            color: #5c5c5c;
+            font-weight: 600;
+            opacity: 1;
+        }
+
+        .form-select option {
+            color: #111111;
+            background: #ffffff;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gym-orange) 0%, #ff8c5a 100%);
+            border: none;
+            font-weight: 700;
+            color: var(--ink-dark);
+            border-radius: 10px;
+            padding: 10px 18px;
+            letter-spacing: 0.4px;
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-outline-light {
+            border-radius: 10px;
+            border-color: rgba(255, 107, 53, 0.5);
+            color: var(--ink-dark);
+            background: #ffffff;
+            font-weight: 700;
+        }
+
+        .btn-outline-light:hover {
+            color: var(--ink-dark);
+            border-color: var(--gym-orange);
+            background: #fff3ee;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid #e8eaee;
+        }
+
+        .empty-row {
+            color: #656b75;
+            text-align: center;
+            font-style: italic;
+            padding: 22px 10px;
+            background: var(--surface-light);
+        }
+
+        .set-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 72px;
+            background: #f8ede8;
+            color: #8b3d20;
+            font-weight: 700;
+            border: 1px solid #f1d4c6;
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .card-custom {
+                padding: 16px;
+                border-radius: 14px;
+            }
+
+            .table thead th,
+            .table td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+
+            .form-control, .form-select {
+                min-height: 40px;
+            }
+        }
+    </style>
+    <link href="/css/light-commercial-theme.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/dashboard">
+            <img src="/images/logo.jpg" alt="FerrumLog" class="brand-logo">
+            <span class="brand-wordmark">FERRUMLOG</span>
+        </a>
+        <div class="ms-auto d-flex gap-3 align-items-center">
+            <a class="nav-link" href="/dashboard">Dashboard</a>
+            <a class="nav-link" href="/workouts/history">Historial</a>
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="nav-link btn btn-link p-0 border-0 bg-transparent">Cerrar Sesion</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <div class="card-custom d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="h3 mb-1">Entrenamientos</h1>
+            <p class="page-subtitle">Selecciona tu rutina y registra cada serie con peso y repeticiones en una vista clara.</p>
+        </div>
+        <a href="/dashboard" class="btn btn-outline-light">Volver al Dashboard</a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="card-custom mb-3">
+        <div th:if="${#lists.isEmpty(routines)}" class="alert alert-warning mb-3">
+            No tienes rutinas todavia. Crea una rutina para registrar tus entrenamientos.
+            <a href="/routines/new" class="alert-link">Crear rutina</a>
+        </div>
+
+        <form method="get" action="/workouts/record" class="row g-3 align-items-end">
+            <div class="col-md-8">
+                <label for="routineId" class="form-label">Rutina</label>
+                <select id="routineId" name="routineId" class="form-select" onchange="this.form.submit()" th:disabled="${#lists.isEmpty(routines)}">
+                    <option th:each="routine : ${routines}"
+                            th:value="${routine.id}"
+                            th:selected="${routine.id == selectedRoutineId}"
+                            th:text="${routine.name}">Rutina</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-grid">
+                <a href="/routines/new" class="btn btn-outline-light">Editar rutinas</a>
+            </div>
+        </form>
+    </div>
+
+    <form th:action="@{/workouts/record}" method="post" th:object="${workoutRoutineForm}" th:if="${!#lists.isEmpty(routines)}">
+        <input type="hidden" th:field="*{routineId}">
+
+        <div class="card-custom">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Ejercicio</th>
+                        <th style="width: 140px;">Serie</th>
+                        <th style="width: 180px;">Peso (kg)</th>
+                        <th style="width: 180px;">Repeticiones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(workoutRoutineForm.entries)}">
+                        <td colspan="4" class="empty-row">Esta rutina no tiene ejercicios asignados.</td>
+                    </tr>
+                    <tr th:each="entry, stat : ${workoutRoutineForm.entries}">
+                        <td>
+                            <strong th:text="${entry.exerciseName}">Ejercicio</strong>
+                            <small class="d-block exercise-meta" th:text="${entry.muscleGroup}">Grupo</small>
+                            <input type="hidden" th:field="*{entries[__${stat.index}__].exerciseId}">
+                            <input type="hidden" th:field="*{entries[__${stat.index}__].exerciseName}">
+                            <input type="hidden" th:field="*{entries[__${stat.index}__].muscleGroup}">
+                            <input type="hidden" th:field="*{entries[__${stat.index}__].setNumber}">
+                        </td>
+                        <td>
+                            <span class="set-pill" th:text="${'Serie ' + entry.setNumber}">Serie 1</span>
+                        </td>
+                        <td>
+                            <input type="number" step="0.5" min="0" class="form-control" th:field="*{entries[__${stat.index}__].weight}">
+                        </td>
+                        <td>
+                            <input type="number" min="1" class="form-control" th:field="*{entries[__${stat.index}__].reps}">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="action-bar">
+                <button type="submit" class="btn btn-primary">Guardar entrenamiento</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

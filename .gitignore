@@ -1,0 +1,33 @@
+# Maven build output
+target/
+
+# Base de datos H2 local (datos de desarrollo, no van al repo)
+data/
+
+# Archivos de sistema
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+*.swp
+*.swo
+
+# VS Code (excepto settings compartidos útiles)
+.vscode/launch.json
+.vscode/tasks.json
+
+# Variables de entorno locales
+.env
+.env.local
+
+# Archivos de secretos
+*.jks
+*.p12
+*.pfx

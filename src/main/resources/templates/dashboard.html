@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FERRUMLOG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --gym-orange: #ff6b35;
+            --gym-dark: #1a1a2e;
+            --gym-darker: #0f0f1e;
+            --gym-light: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Roboto', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--gym-darker) 0%, var(--gym-dark) 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background-color: rgba(26, 26, 46, 0.95);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(255, 107, 53, 0.3);
+        }
+        
+        .navbar-brand {
+            font-weight: 800;
+            color: var(--gym-orange) !important;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--gym-orange) !important;
+        }
+        
+        .sidebar {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            height: fit-content;
+            backdrop-filter: blur(10px);
+        }
+        
+        .sidebar h5 {
+            margin-bottom: 25px;
+            color: var(--gym-orange);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar a {
+            display: block;
+            padding: 15px 18px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar a:hover {
+            background-color: rgba(255, 107, 53, 0.1);
+            border-left-color: var(--gym-orange);
+            color: var(--gym-orange);
+            transform: translateX(5px);
+        }
+        
+        .sidebar a.active {
+            background: linear-gradient(135deg, var(--gym-orange) 0%, #ff8c5a 100%);
+            color: white;
+            border-left-color: var(--gym-orange);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+        
+        .dashboard-card {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .dashboard-card h2 {
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .dashboard-card h3 {
+            color: var(--gym-orange);
+            margin-bottom: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .dashboard-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, var(--gym-orange) 0%, #ff8c5a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(255, 107, 53, 0.5);
+        }
+        
+        .stat-box h5 {
+            margin: 0 0 15px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1rem;
+        }
+        
+        .stat-box .number {
+            font-size: 3rem;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .stat-box small {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .exercise-item {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--gym-orange);
+            transition: all 0.3s ease;
+        }
+        
+        .exercise-item:hover {
+            background: rgba(255, 107, 53, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .exercise-item strong {
+            color: var(--gym-orange);
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .exercise-item p {
+            margin: 8px 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+        
+        .exercise-item small {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gym-orange) 0%, #ff8c5a 100%);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 700;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+            background: linear-gradient(135deg, #ff8c5a 0%, var(--gym-orange) 100%);
+        }
+        
+        .table {
+            background: #ffffff;
+            color: #111111;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table thead {
+            background: #f0f0f0;
+        }
+        
+        .table thead th {
+            color: #111111;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            padding: 15px;
+        }
+        
+        .table tbody tr {
+            border-bottom: 1px solid #e5e5e5;
+            transition: all 0.3s ease;
+        }
+        
+        .table tbody tr:hover {
+            background: #f6f6f6;
+        }
+        
+        .table tbody td {
+            color: #111111;
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+        }
+
+        .recent-workouts-card {
+            border: 2px solid rgba(255, 107, 53, 0.45);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 107, 53, 0.2) inset;
+        }
+
+        .recent-workouts-card h3 {
+            margin-bottom: 0;
+        }
+
+        .recent-workouts-table {
+            border: 1px solid #d7d7d7;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+        }
+
+        .recent-workouts-table tbody tr:first-child td {
+            border-top: none;
+        }
+
+        .recent-workouts-table tbody td a {
+            color: #0d6efd;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .recent-workouts-table tbody td a:hover {
+            color: #0a58ca;
+            text-decoration: underline;
+        }
+        
+        .table tbody td strong {
+            color: #111111;
+            font-weight: 800;
+        }
+        
+        .table tbody td a {
+            color: #111111;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .table tbody td a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .stat-box .number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link href="/css/light-commercial-theme.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.jpg" alt="FerrumLog" class="brand-logo">
+                <span class="brand-wordmark">FERRUMLOG</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="nav-link btn btn-link p-0 border-0 bg-transparent">
+                                Cerrar Sesión
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="sidebar">
+                    <h5>MENÚ</h5>
+                    <a href="/dashboard" class="active">📊 Dashboard</a>
+                    <a href="/routines">🗂️ Rutinas</a>
+                    <a href="/workouts/record">💪 Entrenamientos</a>
+                    <a href="/workouts/history">🕒 Historial</a>
+                    <a href="/exercises">🏋️ Ejercicios</a>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <!-- Welcome Section -->
+                <div class="dashboard-card recent-workouts-card">
+                    <h2>¡BIENVENIDO, <span th:text="${#strings.toUpperCase(username)}">ATLETA</span>!</h2>
+                    <p>Gestiona tus entrenamientos, rutinas y analiza tu progreso.</p>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h5>Entrenamientos</h5>
+                            <div class="number" th:text="${monthlyWorkouts}">0</div>
+                            <small>este mes</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h5>Rutinas Activas</h5>
+                            <div class="number" th:text="${routinesCount}">0</div>
+                            <small>configuradas</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-box">
+                            <h5>Series Registradas</h5>
+                            <div class="number" th:text="${totalSets}">0</div>
+                            <small>en total</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Últimos Entrenamientos -->
+                <div class="dashboard-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                        <h3>Últimos Entrenamientos</h3>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <a class="btn btn-outline-light" href="/workouts/history">Ver historial</a>
+                            <a class="btn btn-primary" href="/workouts/record">+ Nuevo Entrenamiento</a>
+                        </div>
+                    </div>
+
+                    <table class="table table-hover recent-workouts-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Series</th>
+                                <th>Ejercicios</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(recentWorkouts)}">
+                                <td colspan="4">Todavía no tienes entrenamientos registrados.</td>
+                            </tr>
+                            <tr th:each="workout : ${recentWorkouts}">
+                                <td th:text="${#temporals.format(workout.workoutDate, 'dd/MM/yyyy HH:mm')}">01/01/2026 18:30</td>
+                                <td th:text="${workout.totalSets}">0</td>
+                                <td th:text="${workout.totalExercises}">0</td>
+                                <td><a th:href="@{|/workouts/${workout.id}|}">Ver</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mis Rutinas -->
+                <div class="dashboard-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                        <h3>Mis Rutinas</h3>
+                        <a class="btn btn-primary" href="/routines/new">+ Nueva Rutina</a>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12" th:if="${#lists.isEmpty(recentRoutines)}">
+                            <div class="exercise-item">
+                                <strong>Aún no tienes rutinas</strong>
+                                <p>Crea tu primera rutina personalizada.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6" th:each="routine : ${recentRoutines}">
+                            <div class="exercise-item">
+                                <strong th:text="${routine.name}">Nombre rutina</strong>
+                                <p th:text="${routine.description != null and !#strings.isEmpty(routine.description) ? routine.description : 'Sin descripción'}">Descripción</p>
+                                <small th:text="${'Creada: ' + #temporals.format(routine.createdAt, 'dd/MM/yyyy')}">Creada: 01/01/2026</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

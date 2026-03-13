@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FerrumLog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --gym-orange: #ff6b35;
+            --gym-dark: #1a1a2e;
+            --gym-darker: #0f0f1e;
+            --gym-light: #f5f5f5;
+            --gym-gray: #6c757d;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--gym-darker) 0%, var(--gym-dark) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', 'Roboto', 'Segoe UI', sans-serif;
+            color: #ffffff;
+        }
+        
+        .auth-container {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            max-width: 480px;
+            width: 100%;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-header h1 {
+            color: var(--gym-orange);
+            font-weight: 800;
+            font-size: 2.5rem;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+        
+        .auth-header p {
+            color: #b8b8b8;
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            padding: 14px 18px;
+            border: 2px solid #d0d7e2;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            color: #111111 !important;
+            -webkit-text-fill-color: #111111 !important;
+            caret-color: #111111 !important;
+            font-weight: 500;
+        }
+        
+        .form-control::placeholder {
+            color: #555555;
+        }
+        
+        .form-control:focus {
+            border-color: var(--gym-orange);
+            box-shadow: 0 0 0 0.3rem rgba(255, 107, 53, 0.15);
+            background: #ffffff;
+            outline: none;
+            color: #111111 !important;
+            -webkit-text-fill-color: #111111 !important;
+            caret-color: #111111 !important;
+        }
+
+        .form-control,
+        .form-control:-webkit-autofill,
+        .form-control:-webkit-autofill:hover,
+        .form-control:-webkit-autofill:focus {
+            -webkit-text-fill-color: #111111;
+            caret-color: #111111;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .auth-container input.form-control,
+        .auth-container input.form-control:focus,
+        .auth-container input.form-control:active,
+        .auth-container input[type="text"],
+        .auth-container input[type="password"],
+        .auth-container input[type="email"] {
+            color: #111111 !important;
+            -webkit-text-fill-color: #111111 !important;
+            caret-color: #111111 !important;
+            text-shadow: none !important;
+            background-color: #ffffff !important;
+        }
+
+        .auth-container input.form-control::placeholder {
+            color: #555555 !important;
+            -webkit-text-fill-color: #555555 !important;
+        }
+
+        .auth-container input.form-control:-webkit-autofill,
+        .auth-container input.form-control:-webkit-autofill:hover,
+        .auth-container input.form-control:-webkit-autofill:focus,
+        .auth-container input.form-control:-webkit-autofill:active {
+            -webkit-text-fill-color: #111111 !important;
+            caret-color: #111111 !important;
+            box-shadow: 0 0 0 1000px #ffffff inset !important;
+            -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+        }
+        
+        .form-label {
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gym-orange) 0%, #ff8c5a 100%);
+            border: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-login:hover {
+            background: linear-gradient(135deg, #ff8c5a 0%, var(--gym-orange) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #b8b8b8;
+            font-size: 0.95rem;
+        }
+        
+        .auth-footer a {
+            color: var(--gym-orange);
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-footer a:hover {
+            color: #ff8c5a;
+            text-decoration: underline;
+        }
+        
+        .remember-me {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #b8b8b8;
+        }
+        
+        .remember-me a {
+            color: var(--gym-orange);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .remember-me a:hover {
+            text-decoration: underline;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+        }
+        
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            color: #4caf50;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.2);
+            color: #ff6b6b;
+            border-left: 4px solid #ff6b6b;
+        }
+    </style>
+    <link href="/css/light-commercial-theme.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <img src="/images/logo.jpg" alt="FerrumLog" class="auth-logo">
+            <p>Tu progreso, tu poder. Inicia sesión</p>
+        </div>
+
+        <!-- Mensaje de éxito después del registro -->
+        <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
+            Has cerrado sesión correctamente.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Mensaje de error de login -->
+        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            Usuario o contraseña incorrectos.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Mensaje personalizado (ej: después de registro) -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <form method="POST" th:action="@{/login}">
+            <div class="form-group">
+                <label class="form-label" for="username">Nombre de Usuario</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="username" 
+                    name="username"
+                    style="color:#111111 !important; -webkit-text-fill-color:#111111 !important; caret-color:#111111 !important; background:#ffffff !important;"
+                    placeholder="Tu nombre de usuario"
+                    autocomplete="username"
+                    required
+                    autofocus
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Contraseña</label>
+                <input 
+                    type="password" 
+                    class="form-control" 
+                    id="password" 
+                    name="password"
+                    style="color:#111111 !important; -webkit-text-fill-color:#111111 !important; caret-color:#111111 !important; background:#ffffff !important;"
+                    placeholder="Tu contraseña"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <div class="remember-me">
+                <label>
+                    <input type="checkbox" name="remember-me"> Recuérdame
+                </label>
+                <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-login" style="margin-top: 20px;">Iniciar Sesión</button>
+        </form>
+
+        <div class="auth-footer">
+            ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

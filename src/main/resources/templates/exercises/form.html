@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${isEdit} ? 'Editar Ejercicio - FerrumLog' : 'Nuevo Ejercicio - FerrumLog'">Ejercicio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --gym-orange: #ff6b35;
+            --gym-dark: #1a1a2e;
+            --gym-darker: #0f0f1e;
+        }
+
+        body {
+            font-family: 'Inter', 'Roboto', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--gym-darker) 0%, var(--gym-dark) 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .form-wrapper {
+            max-width: 680px;
+            margin: 40px auto;
+            background: rgba(26, 26, 46, 0.9);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-control:focus {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--gym-orange);
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .invalid-feedback {
+            display: block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gym-orange) 0%, #ff8c5a 100%);
+            border: none;
+            font-weight: 700;
+        }
+    </style>
+    <link href="/css/light-commercial-theme.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="form-wrapper">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <div class="page-brand mb-3">
+                    <img src="/images/logo.jpg" alt="FerrumLog" class="brand-logo">
+                    <span class="brand-wordmark">FERRUMLOG</span>
+                </div>
+                <h1 class="h4 mb-0" th:text="${isEdit} ? 'Editar ejercicio' : 'Nuevo ejercicio'">Nuevo ejercicio</h1>
+            </div>
+            <a href="/exercises" class="btn btn-outline-light btn-sm">Volver</a>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <form th:action="${isEdit} ? @{/exercises/{id}(id=${exercise.id})} : @{/exercises}" th:object="${exercise}" method="post">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input id="name" type="text" class="form-control" th:field="*{name}" required>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="muscleGroup" class="form-label">Grupo muscular</label>
+                <input id="muscleGroup" type="text" class="form-control" th:field="*{muscleGroup}" required>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('muscleGroup')}" th:errors="*{muscleGroup}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Descripcion</label>
+                <textarea id="description" class="form-control" rows="4" th:field="*{description}"></textarea>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary" th:text="${isEdit} ? 'Guardar cambios' : 'Crear ejercicio'">Crear ejercicio</button>
+                <a href="/exercises" class="btn btn-outline-light">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

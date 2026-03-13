@@ -1,0 +1,7 @@
+target/
+.git/
+.idea/
+.vscode/
+*.log
+README_BUILD_CMD.md
+FASE2_README.md
