@@ -4,15 +4,23 @@ set -eu
 if [ -n "${DATABASE_URL:-}" ] && [ -z "${SPRING_DATASOURCE_URL:-}" ]; then
   normalized_url="${DATABASE_URL#postgres://}"
   normalized_url="${normalized_url#postgresql://}"
+  query_string=""
 
   credentials_and_host="${normalized_url%%/*}"
   database_name="${normalized_url#*/}"
+  if [ "${database_name#*\?}" != "$database_name" ]; then
+    query_string="?${database_name#*\?}"
+  fi
   database_name="${database_name%%\?*}"
   host_and_port="${credentials_and_host#*@}"
   database_host="${host_and_port%%:*}"
   database_port="${host_and_port#*:}"
 
-  export SPRING_DATASOURCE_URL="jdbc:postgresql://${database_host}:${database_port}/${database_name}"
+  if [ -n "$query_string" ]; then
+    export SPRING_DATASOURCE_URL="jdbc:postgresql://${database_host}:${database_port}/${database_name}${query_string}"
+  else
+    export SPRING_DATASOURCE_URL="jdbc:postgresql://${database_host}:${database_port}/${database_name}?sslmode=require"
+  fi
 fi
 
 exec java ${JAVA_OPTS:-} \

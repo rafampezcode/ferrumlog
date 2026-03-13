@@ -76,7 +76,7 @@ Guarda esa URL porque la vas a necesitar en el Paso 3.
 | Variable de entorno         | Valor                                                  |
 |-----------------------------|--------------------------------------------------------|
 | `SPRING_PROFILES_ACTIVE`    | `postgresql`                                           |
-| `SPRING_DATASOURCE_URL`     | `jdbc:postgresql://db.[PROJECT_REF].supabase.co:5432/postgres` |
+| `SPRING_DATASOURCE_URL`     | `jdbc:postgresql://db.[PROJECT_REF].supabase.co:5432/postgres?sslmode=require` |
 | `SPRING_DATASOURCE_USERNAME`| `postgres`                                             |
 | `SPRING_DATASOURCE_PASSWORD`| `[TU_PASSWORD de Supabase]`                            |
 | `JAVA_OPTS`                 | `-Xms256m -Xmx512m`                                   |
