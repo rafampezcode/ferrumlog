@@ -15,4 +15,6 @@ if [ -n "${DATABASE_URL:-}" ] && [ -z "${SPRING_DATASOURCE_URL:-}" ]; then
   export SPRING_DATASOURCE_URL="jdbc:postgresql://${database_host}:${database_port}/${database_name}"
 fi
 
-exec java ${JAVA_OPTS:-} -jar /app/app.jar
+exec java ${JAVA_OPTS:-} \
+  -Dspring.profiles.active="${SPRING_PROFILES_ACTIVE:-dev}" \
+  -jar /app/app.jar
